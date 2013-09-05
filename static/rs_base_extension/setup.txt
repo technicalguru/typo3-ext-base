@@ -1,0 +1,606 @@
+plugin.tx_rsextbase {
+	config {
+		ajaxTypeNum = {$plugin.tx_rsextbase.ajaxTypeNum}
+		userFolder = {$plugin.tx_rsextbase.userFolder}
+		disableEmails = {$plugin.tx_rsextbase.disableEmails}
+		fromEmailAddress = {$plugin.tx_rsextbase.fromEmailAddress}
+		fromEmailName = {$plugin.tx_rsextbase.fromEmailName}
+		replyEmailAddress = {$plugin.tx_rsextbase.replyEmailAddress}
+		emailDebugCopy = {$plugin.tx_rsextbase.emailDebugCopy}
+		verboseEmail = {$plugin.tx_rsextbase.verboseEmail}
+		adminGroups = {$plugin.tx_rsextbase.adminGroups}
+		maxIdleTime = {$plugin.tx_rsextbase.maxIdleTime}
+		dateFormat = {$plugin.tx_rsextbase.dateFormat}
+		datetimeFormat = {$plugin.tx_rsextbase.datetimeFormat}
+		timeFormat = {$plugin.tx_rsextbase.timeFormat}
+		tinyMceTemplate = {$plugin.tx_rsextbase.tinyMceTemplate}
+		multiselectTemplate = {$plugin.tx_rsextbase.multiselectTemplate}
+		viewProfilePID = {$plugin.tx_rsextbase.viewProfilePID}
+		database {
+			fe_users = username
+		}
+	}
+	
+	# HTML type setup
+	default {
+		default = TEXT
+		default {
+			field = _value
+		}
+		plain = TEXT
+		plain {
+			field = _value
+		}
+		text = TEXT
+		text {
+			field = _value
+			parseFunc < tt_content.text.20.parseFunc
+			parseFunc {
+				allowTags = b,i,u,a,img,br,div,center,pre,hr,sub,sup,p,strong,em,li,ul,ol,blockquote,strike,del,ins,span,h1,h2,h3,h4,h5,h6,address,object,param,embed
+				denyTags = *
+			}
+		}
+		plaintext = TEXT
+		plaintext {
+			field = _value
+			stripHTML = true
+			br = true
+		}		
+		
+		date = TEXT
+		date {
+			field = _value
+			strftime = {$plugin.tx_rsextbase.dateFormat}
+			if.isTrue.field = _value
+		}
+		time = TEXT
+		time {
+			field = _value
+			strftime = {$plugin.tx_rsextbase.timeFormat}
+			if.isTrue.field = _value
+		}
+		datetime = TEXT
+		datetime {
+			field = _value
+			strftime = {$plugin.tx_rsextbase.datetimeFormat}
+			if.isTrue.field = _value
+		}
+		content = CONTENT
+		content {
+			table = pages
+			select {
+				selectFields = *
+				where = deleted=0 AND hidden=0
+				andWhere {
+					field = _value
+					wrap = uid=|
+				}
+			}
+			renderObj = TEXT
+			renderObj {
+				required = 1
+				field = title
+			}
+		}
+
+		image = IMAGE
+		image {
+			file.field = _value
+		}
+		icon = IMAGE
+		icon {
+			file.field = _value
+			file.maxW = {$plugin.tx_rsextbase.maxIconWidth}
+			file.maxH = {$plugin.tx_rsextbase.maxIconHeight}
+		}
+		error = COA
+		error {
+			10 = TEXT
+			10 {
+				field = _value
+			}
+			20 = TEXT
+			20 {
+				field = _error
+				wrap = <div class="error">|</div>
+				if.isTrue.field = _error
+			}
+		}
+		gender = CASE
+		gender {
+			key.field = _value
+			default = TEXT
+			default.value = Male
+			default.lang.de = Männlich
+			1 = TEXT
+			1.value = Female
+			1.lang.de = Weiblich
+		}
+		gender_icon = CASE
+		gender_icon {
+			key.field = _value
+			default = IMAGE
+			default {
+				file = EXT:rsextbase/res/icons/userlist_male.gif
+				altText.cObject < plugin.tx_rsextbase.default.gender.default
+			}
+			1 = IMAGE
+			1 {
+				file = EXT:rsextbase/res/icons/userlist_female.gif
+				altText.cObject < plugin.tx_rsextbase.default.gender.1
+			}
+		}
+		
+		yesno = CASE
+		yesno {
+			key.field = _value
+			default = TEXT
+			default {
+				value = Yes
+				lang.de = Ja
+			}
+			0 = TEXT
+			0 {
+				value = No
+				lang.de = Nein
+			}
+		}
+		online_status = CASE
+		online_status {
+			key.field = _is_online
+			default = IMAGE
+			default {
+				file = EXT:rsextbase/res/icons/userlist_status_offline.gif
+				altText = Offline
+			}
+			1 = IMAGE
+			1 {
+				file = EXT:rsextbase/res/icons/userlist_status_online.gif
+				altText = Online
+			}
+		}
+		lastlogin = COA
+		lastlogin {
+			10 < plugin.tx_rsextbase.default.online_status
+			15 = TEXT
+			15.value = &nbsp;
+			20 = CASE
+			20 {
+				key.field = _is_online
+				default = TEXT
+				default {
+					field = _value
+					strftime = {$plugin.tx_rsextbase.dateFormat}
+					required = 1
+				}
+				1 = TEXT
+				1 {
+					value = Online
+					wrap = <span class="useronline">|</span>
+				}
+			}
+		}
+		userlink = TEXT
+		userlink {
+			field = _value
+			typolink {
+				parameter = {$plugin.tx_rsextbase.viewProfilePID}
+				additionalParams {
+					field=uid
+					wrap = &action=profile&uid=|
+				}
+				title.field = name
+			}
+		}
+		email = TEXT
+		email {
+			field = _value
+			required = 1
+			typolink.parameter.field = email
+		}
+		
+		checked_option = TEXT
+		checked_option {
+			value = %%%LABEL%%%<br/>
+			if.equals.field = _value
+			if.value = 1
+		}
+		
+		# Form configuration
+		form_input = TEXT
+		form_input {
+			field = _value
+			wrap = <input type="text" name="%%%GPVAR%%%" size="40" value="|"/>
+			htmlSpecialChars = 1
+		}
+		form_password = TEXT
+		form_password {
+			field = _value
+			wrap = <input type="password" name="%%%GPVAR%%%" size="40" value="|"/>
+			htmlSpecialChars = 1
+		}
+		form_checkbox = CASE
+		form_checkbox {
+			key.field = _value
+			default = TEXT
+			default {
+				value = <input type="checkbox" name="%%%GPVAR%%%" value="1" checked="checked"/>
+			}
+			0 = TEXT
+			0 {
+				value = <input type="checkbox" name="%%%GPVAR%%%" value="1"/>
+			}
+			stdWrap.wrap = |&nbsp;%%%LABEL%%%
+		}
+		form_simple_checkbox < plugin.tx_rsextbase.default.form_checkbox
+		form_simple_checkbox.stdWrap >
+
+		form_select = USER
+		form_select {
+			includeLibs = EXT:rsextbase/res/class.tx_rsextbase_select.php
+			userFunc = tx_rsextbase_select->select
+			multiselectTemplate = {$plugin.tx_rsextbase.multiselectTemplate}
+			field = _value
+			wrap = <select name="%%%GPVAR%%%">|</select>
+			table {
+				name = fe_groups
+				pidInList = {$plugin.tx_rsextbase.userFolder}
+				where = deleted=0 AND hidden=0
+				orderBy = title
+				valueField = uid
+			}
+			
+			default = COA
+			default {
+				10 = TEXT
+				10 {
+					field = uid
+					wrap = <option value="|">
+				}
+				20 = TEXT
+				20 {
+					field = title
+				}
+				30 = TEXT
+				30 {
+					value = </option>
+				}
+			}
+			
+			selected < plugin.tx_rsextbase.default.form_select.default
+			selected {
+				10.wrap = <option value="|" selected="selected">
+			}
+		}
+
+		form_multiselect < plugin.tx_rsextbase.default.form_select
+		form_multiselect {
+			wrap = <select name="%%%GPVAR%%%[]" class="multiselect" multiple="multiple" size="20">|</select>
+			multiselect = 1
+		}
+		
+		form_text = TEXT
+		form_text {
+			field = _value
+			wrap = <textarea name="%%%GPVAR%%%" cols="60" rows="10">|</textarea>
+			stripHTML = true
+		}
+		form_submit = TEXT
+		form_submit {
+			value = Submit
+			lang.de = Abschicken
+			wrap = <input type="submit" name="%%%GPVAR%%%" value="|"/>
+			htmlSpecialChars = 1
+		}
+		form_search = TEXT
+		form_search {
+			value = Search
+			lang.de = Suchen
+			wrap = <input type="submit" name="%%%GPVAR%%%" value="|"/>
+			htmlSpecialChars = 1
+		}
+		form_back = TEXT
+		form_back {
+			value = Back
+			lang.de = Erneut Bearbeiten
+			wrap = <input type="submit" name="%%%GPVAR%%%" value="|"/>
+			htmlSpecialChars = 1
+		}
+		form_reset = TEXT
+		form_reset {
+			value = Reset
+			lang.de = Zurücksetzen
+			wrap = <input type="reset" name="%%%GPVAR%%%" value="|"/>
+			htmlSpecialChars = 1
+		}
+		form_cancel = TEXT
+		form_cancel {
+			value = Cancel
+			lang.de = Abbrechen
+			wrap = <input type="submit" name="%%%GPVAR%%%" value="|"/>
+			htmlSpecialChars = 1
+		}
+		form_preview = TEXT
+		form_preview {
+			value = Preview
+			lang.de = Vorschau
+			wrap = <input type="submit" name="%%%GPVAR%%%" value="|"/>
+			htmlSpecialChars = 1
+		}
+		form_hidden = TEXT
+		form_hidden {
+			field = _value 
+			wrap = <input type="hidden" name="%%%GPVAR%%%" value="|"/>
+			htmlSpecialChars = 1
+		}
+		form_date = COA
+		form_date {
+			includeCSS.datepicker = EXT:rsextbase/res/date-picker-v4/css/datepicker.css
+			10 = TEXT
+			10 {
+				value = <script type="text/javascript" src="%%%RSEXTBASEPATH%%%res/date-picker-v4/js/datepicker.js"></script>
+			}
+			20 = TEXT
+			20 {
+				field = _value
+				wrap = <input type="text" size="8" id="%%%IDVAR%%%" name="%%%GPVAR%%%" class="dateformat-d-sl-m-sl-Y" value="|" />
+				# DO NOT CHANGE THIS
+				strftime = %d/%m/%Y
+			}
+		}
+		form_hours < plugin.tx_rsextbase.default.form_select
+		form_hours {
+			table >
+			options {
+				0 = 00
+				1 = 01
+				2 = 02
+				3 = 03
+				4 = 04
+				5 = 05
+				6 = 06
+				7 = 07
+				8 = 08
+				9 = 09
+				10 = 10
+				11 = 11
+				12 = 12
+				13 = 13
+				14 = 14
+				15 = 15
+				16 = 16
+				17 = 17
+				18 = 18
+				19 = 19
+				20 = 20
+				21 = 21
+				22 = 22
+				23 = 23
+			}
+		}
+		form_minutes < plugin.tx_rsextbase.default.form_select
+		form_minutes {
+			table >
+			options {
+				0 = 00
+				5 = 05
+				10 = 10
+				15 = 15
+				20 = 20
+				25 = 25
+				30 = 30
+				35 = 35
+				40 = 40
+				45 = 45
+				50 = 50
+				55 = 55
+			}
+		}
+		form_time = COA
+		form_time {
+			10 < plugin.tx_rsextbase.default.form_hours
+			20 = TEXT
+			20.value = &nbsp;:&nbsp;
+			30 < plugin.tx_rsextbase.default.form_minutes
+		}
+		form_image = COA
+		form_image {
+			maxFileSize = {$plugin.tx_rsextbase.maxFileSize}
+			maxW = 250
+			maxH = 250
+			10 = TEXT
+			10 {
+				value = <input type="file" name="%%%GPVAR%%%" value="" maxlength="500000" accept="image/*"/>
+				wrap = <div class="userimage_upload">|</div>
+			}
+			20 = COA
+			20 {
+				10 = IMAGE
+				10 {
+					file.import.field = image
+					file.maxW = 64
+					file.maxH = 64
+				}
+				20 = TEXT
+				20 {
+					wrap = &nbsp;&nbsp;<input type="checkbox" name="%%%PREFIXID%%%[removeImage]" value="1">&nbsp;|
+					if.isTrue.field = image
+					value = Remove image
+					lang.de = Bild entfernen
+				}
+				wrap = <div class="userimage_display">|</div>
+			}
+		}
+		count = TEXT
+		count {
+			field = _value
+			postCObject = CASE
+			postCObject {
+				key.field = _value
+				0 = TEXT
+				0 {
+					value = &nbsp;items
+					lang.de = &nbsp;Objekte
+				}
+				1 = TEXT
+				1 {
+					value = &nbsp;item
+					lang.de = &nbsp;Object
+				}
+				default = TEXT
+				default {
+					value = &nbsp;items
+					lang.de = &nbsp;Objekte
+				}
+			}
+		}
+		alt_count = CASE
+		alt_count {
+			key.field = _value
+			0 = TEXT
+			0 {
+				value = No items
+				lang.de = Keine Objekte
+			}
+			1 = TEXT
+			1 {
+				value = 1 item
+				lang.de = 1 Objekt
+			}
+			default = TEXT
+			default {
+				field = _value
+				postCObject = TEXT
+				postCObject {
+					value = &nbsp;items
+					lang.de = &nbsp;Objekte
+				}
+			}
+		}
+		kcfinder = COA
+		kcfinder {
+			10 = TEXT
+			10.field = kcfinder
+			10.wrap = <iframe src="|" width="680" height="500">Loading...</iframe>
+			if.isTrue.field = kcfinder
+		}
+		download = TEXT
+		download {
+			value = Download
+			typolink.parameter.field = _value
+		}
+		
+		tinymce = USER
+		tinymce {
+			includeLibs = EXT:rsextbase/res/class.tx_rsextbase_tinymce.php
+			userFunc = tx_rsextbase_tinymce->tinymce
+			templateFile = {$plugin.tx_rsextbase.tinyMceTemplate}
+			kcfinder = 1
+			kcfinder {
+				width = 700
+				height = 500
+			}
+			textarea = TEXT
+			textarea {
+				field = _value
+				wrap = <textarea id="%%%GPVAR%%%" name="%%%GPVAR%%%" rows="30" cols="80" style="width: 80%">|</textarea>
+				parseFunc < tt_content.text.20.parseFunc
+				parseFunc {
+					allowTags = b,i,u,a,img,br,div,center,pre,hr,sub,sup,p,strong,em,li,ul,ol,blockquote,strike,del,ins,span,h1,h2,h3,h4,h5,h6,address,object,param,embed
+					denyTags = *
+				}
+			}
+		}
+		form_gender = COA
+		form_gender {
+			10 = HTML
+			10 {
+				value = <input type="radio" name="%%%GPVAR%%%" value="0"/>&nbsp;
+				value.addParams {
+					checked = checked
+					checked {
+						if.isFalse.field = _value
+						override = checked
+					}
+					_offset = -1
+				}
+			}
+			20 = TEXT
+			20 {
+				value = Male
+				lang.de = Männlich
+			}
+			30 = HTML
+			30 {
+				value = &nbsp;&nbsp;<input type="radio" name="%%%GPVAR%%%" value="1">&nbsp;
+				value.addParams {
+					checked = checked
+					checked {
+						if.isTrue.field = gender
+						override = _value
+					}
+					_offset = -1
+				}
+			}
+			40 = TEXT
+			40 {
+				value = Female
+				lang.de = Weiblich
+			}
+		}
+		
+		h1 = TEXT
+		h1 {
+			field = _value
+			wrap = <h1>|</h1>
+		}
+		
+		h2 < plugin.tx_rsextbase.default.h1
+		h2.wrap = <h2>|</h2>
+		
+		h3 < plugin.tx_rsextbase.default.h2
+		h3.wrap = <h3>|</h3>
+		
+		h4 < plugin.tx_rsextbase.default.h3
+		h4.wrap = <h4>|</h4>
+		
+		h5 < plugin.tx_rsextbase.default.h4
+		h5.wrap = <h5>|</h5>
+		
+		h6 < plugin.tx_rsextbase.default.h5
+		h6.wrap = <h6>|</h6>
+		
+		tsfe_id = TEXT
+		tsfe_id {
+			field = _value 
+			wrap = <input type="hidden" name="id" value="|"/>
+			htmlSpecialChars = 1
+		}
+	}
+}
+
+# Newscalendar has its own jQuery -> disabling
+plugin.tx_newscalendar_pi1.file {
+        jsJQuery >
+}
+
+# AJAX Dispatcher config
+plugin.tx_rsextbase_pi1 {
+	config < plugin.tx_rsextbase.config
+	default < plugin.tx_rsextbase.default
+}
+	
+# Create AJAX page type
+ajaxPage = PAGE
+ajaxPage {
+	typeNum = {$plugin.tx_rsextbase.ajaxTypeNum}
+	10 < plugin.tx_rsextbase_pi1
+  
+	config {
+		disableAllHeaderCode = 1
+		xhtml_cleaning = 0
+		admPanel = 0
+		debug = 0
+		no_cache = 1
+	}
+}

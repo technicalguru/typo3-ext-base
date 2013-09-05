@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>module</type>
+		<description>Language labels for plugin tx_rsextbase_pi1</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="tt_content.list_type">RS AJAX Dispatch Plugin</label>
+			<label index="err_no_such_method">No such method</label>
+			<label index="err_invalid_request">Invalid request</label>
+			<label index="err_no_ajax">AJAX not supported by Plugin</label>
+
+			<!-- Flexform -->
+			<label index="flexform.general.title">ExtBase Configuration</label>
+			<label index="flexform.general.templateFile">Template File</label>
+		</languageKey>
+		<languageKey index="de" type="array">
+			<label index="tt_content.list_type">RS AJAX Dispatch Plugin</label>
+			<label index="err_no_such_method">Methode existiert nicht</label>
+			<label index="err_invalid_request">Ungueltiger Request</label>
+			<label index="err_no_ajax">AJAX wird durch Plugin nicht unterstuetzt</label>
+			
+			<!-- Flexform -->
+			<label index="flexform.general.title">ExtBase Configuration</label>
+			<label index="flexform.general.templateFile">Template File</label>
+		</languageKey>
+	</data>
+</T3locallang>

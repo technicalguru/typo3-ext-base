@@ -1,0 +1,46 @@
+plugin.tx_rsextbase {
+	# TypeNum of AJAX requests
+	ajaxTypeNum = 5000
+	
+	# Data Folder of FE users
+	userFolder = 0
+	
+	# Shall emails be diabled?
+	disableEmails = 0
+	
+	# Sender address for emails
+	fromEmailAddress = typo3@localhost
+	
+	# Sender name of emails
+	fromEmailName = Typo3 Administrator
+	
+	# Email addresses for replies
+	replyEmailAddress = typo3@localhost
+	
+	# Email debug copies to
+	emailDebugCopy = typo3@localhost
+	
+	# Echo all emails to HTML page when sending
+	verboseEmail = 0
+	
+	# Admin FE group
+	adminGroups = 0
+	
+	# Maximum idle time of FE users before regarded as offline
+	maxIdleTime = 1800
+	
+	# Date and Time formats
+	dateFormat = %d.%m.%Y
+	timeFormat = %H:%M
+	datetimeFormat = %d.%m.%Y %H:%M
+	
+	# Sizes
+	maxIconWidth = 16
+	maxIconHeight = 16
+	
+	# Template for TinyMCE
+	tinyMceTemplate = EXT:rsextbase/res/tinymce.tmpl
+	
+	# Template for Multiselect elements
+	multiselectTemplate = EXT:rsextbase/res/multiselect.tmpl
+}

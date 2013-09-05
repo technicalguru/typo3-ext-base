@@ -1,0 +1,27 @@
+<T3DataStructure>
+	<meta>
+		<langDisable>1</langDisable>
+	</meta>
+	<sheets>
+		<sDEF>
+			<ROOT>
+				<TCEforms>
+					<sheetTitle>LLL:EXT:rsextbase/pi1/locallang.xml:flexform.general.title</sheetTitle>
+				</TCEforms>
+				<type>array</type>
+				<el>
+					<templateFile>
+						<TCEforms>
+							<label>LLL:EXT:rsextbase/pi1/locallang.xml:flexform.general.templateFile</label>
+							<config>
+								<type>input</type>
+								<size>40</size>
+							</config>
+						</TCEforms>
+					</templateFile>
+				</el>
+			</ROOT>
+		</sDEF>
+	</sheets>
+</T3DataStructure>
+                                                                

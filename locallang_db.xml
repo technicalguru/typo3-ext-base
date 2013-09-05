@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>database</type>
+		<description>Language labels for extension 'rsextbase'</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="tx_rsextbase_scheduler">RSExtbase Scheduler Information</label>
+			<label index="tx_rsextbase_scheduler.application">Application Key</label>
+			<label index="tx_rsextbase_scheduler.task">Application Task</label>
+			<label index="tx_rsextbase_scheduler.schedule_type">Schedule Type</label>
+			<label index="tx_rsextbase_scheduler.schedule_data">Schedule Data</label>
+			<label index="tx_rsextbase_scheduler.current_run">Current Execution Timestamp</label>
+			<label index="tx_rsextbase_scheduler.last_run">Last Execution Timestamp</label>
+		</languageKey>
+		<languageKey index="de" type="array">
+		</languageKey>
+	</data>
+</T3locallang>

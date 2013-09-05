@@ -1,0 +1,52 @@
+
+BASIC Topics:
+
+	* Terms (extension, plugin, configuration, template, marker, label, value array etc)
+	* Required extensions (T3jquery on every page!!!)
+	* Basic Installation
+	* Basic TS Setup/Template installation
+	* Basic Test
+	
+HOW IT WORKS Topics:
+
+	* TS Configuration
+	* TS Defaults
+	* Templates
+	* Mode of Operation
+	* Value Array
+	* Markers
+	* Marker Substitution
+		* Template syntax (sub-templates, single markers, sub-part markers)
+		* Visibility
+		* Labels
+		* Single Markers
+			- TS setup
+			- Error Wrapping
+			- Default HTML setup (types)
+			- Variable Injection
+		* Special Markers
+	* Emailing
+	* TinyMCE
+	* KCFinder
+	* Datepicker
+	* jQuery UI and Multiselects
+	* AJAX
+	
+HOWTO Topics:
+
+	* Creating an extension
+		- TS setup
+		- PHP Base classes
+	* Creating a new FE plugin
+		- TS setup
+		- Hello World Plugin
+		- Publishing plugin for Typo3
+		- Testing the new plugin
+		
+Other Topics:
+
+	* ChangeLog
+	* Known bugs and Issues
+	* Support (Bugs & Change Requests)
+	* Latest version
+	
