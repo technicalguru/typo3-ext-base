@@ -6,8 +6,11 @@ if (defined('E_DEPRECATED')) {
         error_reporting(E_ALL ^ E_NOTICE);
 }
 
-// define path to typo3conf here:
-$typo3conf = '/srv/www/jrt.de/dev/typo3conf';
+// find the typo3conf folder by walking up the dir tree
+$typo3conf = 'typo3conf';
+while (!file_exists($typo3conf) && !is_dir($typo3conf)) {
+	$typo3conf = '../'.$typo3conf;
+}
 
 // ******************
 // Constants defined
@@ -23,12 +26,21 @@ class Authorization {
 	var $passwd;
 
 	function Authorization() {
-		require_once(PATH_typo3conf.'/localconf.php');
+		// Is this a new typo3 installation?
+		if (file_exists(PATH_typo3conf.'/LocalConfiguration.php')) {
+			$conf = require PATH_typo3conf.'/LocalConfiguration.php';
+			$this->dbhost = $conf['DB']['host'];
+			$this->dbname = $conf['DB']['database'];
+			$this->user   = $conf['DB']['username'];
+			$this->passwd = $conf['DB']['password'];
+		} else {
+			require_once(PATH_typo3conf.'/localconf.php');
 
-		$this->dbhost = $typo_db_host;
-		$this->dbname = $typo_db;
-		$this->user   = $typo_db_username;
-		$this->passwd = $typo_db_password;
+			$this->dbhost = $typo_db_host;
+			$this->dbname = $typo_db;
+			$this->user   = $typo_db_username;
+			$this->passwd = $typo_db_password;
+		}
 	}
 	
 	public function isAuthorized(&$uploader) {
