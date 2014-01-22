@@ -124,8 +124,6 @@ class tx_rsextbase_scheduler extends tx_rsextbase_database {
 				$execTasks[] = $task;
 			} else if (($task['default_runtime'] > 0) && ($task['current_run']+$task['default_runtime'] < time())) {
 				$execTasks[] = $task;
-			} else if (($task['default_runtime'] > 0) && ($task['current_run']+3600*24 < time())) {
-				$execTasks[] = $task;
 			}
 		}
 		

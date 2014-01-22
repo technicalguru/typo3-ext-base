@@ -47,7 +47,7 @@ class Authorization {
 		$rc = false;
 		$con = mysql_connect($this->dbhost, $this->user, $this->passwd);
 		if (!$con) {
-    		die;
+    			die;
 		}
 		mysql_select_db($this->dbname) || die;
 		

@@ -103,6 +103,7 @@ class tx_rsextbase_database {
 	function createRecord($table, $record) {
 		$res = $GLOBALS['TYPO3_DB']->exec_INSERTquery($table, $record);
 		if ($res) return $GLOBALS['TYPO3_DB']->sql_insert_id();
+		#echo $GLOBALS['TYPO3_DB']->sql_errno().": ".$GLOBALS['TYPO3_DB']->sql_error();
 		return 0;
 	}
 

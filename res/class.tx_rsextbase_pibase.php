@@ -1040,23 +1040,6 @@ class tx_rsextbase_pibase extends tslib_pibase {
 		$this->config[$mode.'.']['fieldnames'] = implode(',', $fieldList);
 
 	}
-	
-	/**
-	 * Make a field invisible by programmatic means. The field will be removed from TS config list <mode>.fieldnames
-	 * @param $mode
-	 * @param $field
-	 */
-	function disableField($mode, $field) {
-		$fieldList = explode(',', $this->config[$mode.'.']['fieldnames']);
-		$newList = array();
-		foreach ($fieldList AS $value) {
-			if ($value != $field) {
-				$newList[] = $value;
-			}
-		}
-		$this->config[$mode.'.']['fieldnames'] = implode(',', $newList);
-
-	}
 
 	/**
 	 * Replacement method for templates.
