@@ -277,6 +277,7 @@ class tx_rsextbase_database {
 	 */
 	function getOnlineUsers() {
 		if (!isset($this->onlineUsers)) {
+			$this->onlineUsers = array();
 			$where = 'a.uid=b.ses_userid AND a.deleted=0 AND a.disable=0 AND a.pid='.$this->config['userFolder'];
 			$rows = $this->getRecords('fe_users a, fe_sessions b', $where);
 			foreach ($rows AS $row) {
@@ -286,7 +287,10 @@ class tx_rsextbase_database {
 				}
 			}
 		}
-		return array_values($this->onlineUsers);
+		if (is_array($this->onlineUsers)) {
+			return array_values($this->onlineUsers);
+		}
+		return array();
 	}
 
 	/**
