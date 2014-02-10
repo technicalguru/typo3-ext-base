@@ -1357,7 +1357,7 @@ class tx_rsextbase_pibase extends tslib_pibase {
 			$targetKey = strtolower($prefix.'_'.$key);
 			if (is_array($value)) {
 				if (!isset($target[$targetKey])) {
-					$this->addArray($target, $targetKey, $value);
+					tx_rsextbase_pibase::addArray($target, $targetKey, $value);
 				}
 			}
 			else {
