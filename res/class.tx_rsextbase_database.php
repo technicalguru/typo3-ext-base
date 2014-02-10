@@ -23,17 +23,17 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-
+/** Base database class */
 class tx_rsextbase_database {
 
-	var $pi;
+	var $config;
 	
 	/**
 	 * 
-	 * @param $pi - plugin this object belongs to
+	 * @param $config - configuration (usually a plugin's config object)
 	 */
-	function init(&$pi) {
-		$this->pi = $pi;
+	function init($config) {
+		$this->config = $config;
 	}
 
 	/********************************************************************
@@ -152,7 +152,7 @@ class tx_rsextbase_database {
 	 */
 	function getDefaultSorting($table) {
 		// Get the default sorting from config
-		if ($this->pi->config['config.']['database.'][$table]) return $this->pi->config['config.']['database.'][$table];
+		if ($this->config['config.']['database.'][$table]) return $this->config['config.']['database.'][$table];
 		return '';
 	}
 	
@@ -163,7 +163,7 @@ class tx_rsextbase_database {
 	 * Returns all active users.
 	 */
 	function getUsers() {
-		$where = 'deleted=0 AND disable=0 AND pid='.$this->pi->config['userFolder'];
+		$where = 'deleted=0 AND disable=0 AND pid='.$this->config['userFolder'];
 		return $this->getUsersWhere($where);
 	}
 
@@ -188,7 +188,7 @@ class tx_rsextbase_database {
 	function getUser($uid = 0) {
 		if ($uid == 0) return $GLOBALS['TSFE']->fe_user->user;
 		$rc = array();
-		$where = 'deleted=0 AND uid='.$uid.' AND pid='.$this->pi->config['userFolder'];
+		$where = 'deleted=0 AND uid='.$uid.' AND pid='.$this->config['userFolder'];
 		$rc = $this->getRecord('fe_users', $where);
 		if (is_array($rc)) $rc['_is_online'] = $this->isUserOnline($rc);
 		return $rc;
@@ -202,7 +202,7 @@ class tx_rsextbase_database {
 	function getUserByName($username, $disabled) {
 		$rc = array();
 		$username = $GLOBALS['TYPO3_DB']->fullQuoteStr($username, 'fe_users');
-		$where = "deleted=0 AND username=$username AND pid=".$this->pi->config['userFolder'];
+		$where = "deleted=0 AND username=$username AND pid=".$this->config['userFolder'];
 		if (!$disabled) {
 			$where .= ' AND disable=0';
 		}
@@ -219,7 +219,7 @@ class tx_rsextbase_database {
 	function getUserByEmail($email, $registered) {
 		$rc = array();
 		$email = $GLOBALS['TYPO3_DB']->fullQuoteStr($email, 'fe_users');
-		$where = "deleted=0 AND email=$email AND pid=".$this->pi->config['userFolder'];
+		$where = "deleted=0 AND email=$email AND pid=".$this->config['userFolder'];
 		if (!$registered) {
 			$where .= ' AND disable=0';
 		}
@@ -235,7 +235,7 @@ class tx_rsextbase_database {
 	function isAdminUser($user = 0) {
 		if (!$user) $user = $GLOBALS["TSFE"]->fe_user->user;
 		if (!is_array($user)) $user = $this->getUser($user);
-		$groups = explode(',', $this->pi->config['adminGroups']);
+		$groups = explode(',', $this->config['adminGroups']);
 		foreach ($groups AS $gr) {
 			if ($this->inGroup($gr, $user['usergroup'])) return 1;
 		}
@@ -277,7 +277,7 @@ class tx_rsextbase_database {
 	 */
 	function getOnlineUsers() {
 		if (!isset($this->onlineUsers)) {
-			$where = 'a.uid=b.ses_userid AND a.deleted=0 AND a.disable=0 AND a.pid='.$this->pi->config['userFolder'];
+			$where = 'a.uid=b.ses_userid AND a.deleted=0 AND a.disable=0 AND a.pid='.$this->config['userFolder'];
 			$rows = $this->getRecords('fe_users a, fe_sessions b', $where);
 			foreach ($rows AS $row) {
 				if ($this->isOnline($row['ses_tstamp'])) {
@@ -310,7 +310,7 @@ class tx_rsextbase_database {
 	 * @param $tstamp
 	 */
 	function isOnline($tstamp) {
-		$max_idle_time = $this->pi->config['maxIdleTime'];
+		$max_idle_time = $this->config['maxIdleTime'];
 		if (!$max_idle_time) $max_idle_time = 1800;
 		$time = time();
 		$diff = $time - intval($tstamp);
@@ -328,7 +328,7 @@ class tx_rsextbase_database {
 	 * get all groups.
 	 */
 	function getGroups() {
-		$where = 'deleted=0 AND pid='.$this->pi->config['userFolder'];
+		$where = 'deleted=0 AND pid='.$this->config['userFolder'];
 		return $this->getRecords('fe_groups', $where);
 	}
 
@@ -338,7 +338,7 @@ class tx_rsextbase_database {
 	 */
 	function getGroup($uid) {
 		$rc = array();
-		$where = 'deleted=0 AND hidden=0 AND uid='.$uid.' AND pid='.$this->pi->config['userFolder'];
+		$where = 'deleted=0 AND hidden=0 AND uid='.$uid.' AND pid='.$this->config['userFolder'];
 		return $this->getRecord('fe_groups', $where);
 	}
 
@@ -358,7 +358,7 @@ class tx_rsextbase_database {
 		$rc = array();
 
 		// Check all members
-		$where = 'deleted=0 AND disable=0 AND pid='.$this->pi->config['userFolder'];
+		$where = 'deleted=0 AND disable=0 AND pid='.$this->config['userFolder'];
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'fe_users', $where, '', $this->getDefaultSorting('fe_users'));
 		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 			if ($this->inGroup($guid, $row['usergroup'])) {
@@ -409,7 +409,7 @@ class tx_rsextbase_database {
 		$rc = array($guid);
 		while (TRUE) {
 			$before = count($rc);
-			$where = 'deleted=0 AND hidden=0 AND pid='.$this->pi->config['userFolder'];
+			$where = 'deleted=0 AND hidden=0 AND pid='.$this->config['userFolder'];
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'fe_groups', $where);
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 				$arr = explode(',', $row['subgroup']);

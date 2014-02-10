@@ -22,8 +22,6 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-require_once(t3lib_extMgm::extPath('jrt').'res/class.tx_jrt_pibase.php');
-
 class tx_rsextbase_tinymce extends tx_rsextbase_pibase {
 	
 	var $cObj;
