@@ -32,8 +32,8 @@ class tx_rsextbase_database {
 	 * 
 	 * @param $config - configuration (usually a plugin's config object)
 	 */
-	function init($config) {
-		$this->config = $config;
+	function init(&$config) {
+		$this->config = &$config;
 	}
 
 	/********************************************************************

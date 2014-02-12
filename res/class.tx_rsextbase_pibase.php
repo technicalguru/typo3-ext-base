@@ -100,7 +100,7 @@ class tx_rsextbase_pibase extends tslib_pibase {
 	 */
 	function createDatabaseObject() {
 		$this->db = t3lib_div::makeInstance('tx_rsextbase_database');
-		$this->db->init($this->config);
+		$this->db->init(&$this->config);
 	}
 	
 	/**
