@@ -151,7 +151,7 @@ class tx_rsextbase_pibase extends tslib_pibase {
 	 * Returns true when the current call is an AJAX call (checks typeNum).
 	 */
 	function isAjaxRequest() {
-		return $this->config['ajaxTypeNum'] == $GLOBALS['TSFE']->type;
+		return ($this->config['ajaxTypeNum'] != 0) && ($this->config['ajaxTypeNum'] == $GLOBALS['TSFE']->type);
 	}
 	
 	/**
