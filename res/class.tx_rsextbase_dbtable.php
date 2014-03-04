@@ -53,6 +53,15 @@ class tx_rsextbase_dbtable {
 	}
 
 	/**
+	  * Returns number of records of the table represented by this object.
+	  * @param string $where - WHERE clause
+	  */
+	function count($where) {
+		$arr = $this->database->selectRecord('count(*) AS cnt', $this->table, $where);
+		return $arr['cnt'];
+	}
+
+	/**
 	  * Returns a single record of the table represented by this object.
 	  * @param string $where - WHERE clause (assumed to select single record)
 	  * @param string $order - ORDER clause
