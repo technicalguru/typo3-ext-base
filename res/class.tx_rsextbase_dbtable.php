@@ -28,6 +28,7 @@ class tx_rsextbase_dbtable {
 
 	var $table;
 	var $database;
+	var $debugSQL = FALSE;
 	
 	/**
 	  * Creates this object.
@@ -49,6 +50,12 @@ class tx_rsextbase_dbtable {
 	  * @param string $order - ORDER clause
 	  */
 	function select($where, $n = '', $order = '') {
+		if ($this->debugSQL) {
+			echo "SELECT * FROM ".$this->table;
+			if ($where) echo " WHERE $where";
+			if ($order) echo " ORDER BY $order";
+			if ($n) echo " LIMIT 0,$n";
+		}
 		return $this->database->getRecords($this->table, $where, $order, $n);
 	}
 
