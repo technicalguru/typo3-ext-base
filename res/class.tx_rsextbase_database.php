@@ -62,7 +62,7 @@ class tx_rsextbase_database {
 	 * @param $where
 	 */
 	function getRecords($table, $where, $order = '', $n = '') {
-		return $this->selectRecords('DISTINCT *', $table, $where, $n, $order);
+		return $this->selectRecords('DISTINCT *', $table, $where, $order, $n);
 	}
 
 	/**
