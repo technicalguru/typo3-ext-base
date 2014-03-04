@@ -51,12 +51,14 @@ class tx_rsextbase_dbtable {
 	  */
 	function select($where, $n = '', $order = '') {
 		if ($this->debugSQL) {
-			echo "SELECT * FROM ".$this->table;
-			if ($where) echo " WHERE $where";
-			if ($order) echo " ORDER BY $order";
-			if ($n) echo " LIMIT 0,$n";
+			$previous = $this->database->debugSQL;
+			$this->database->debugSQL = $this->debugSQL;
 		}
-		return $this->database->getRecords($this->table, $where, $order, $n);
+		$rc = $this->database->getRecords($this->table, $where, $order, $n);
+		if ($this->debugSQL) {
+			$this->database->debugSQL = $previous;
+		}
+		return $rc;
 	}
 
 	/**

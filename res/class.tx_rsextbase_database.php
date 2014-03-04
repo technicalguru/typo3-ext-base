@@ -27,6 +27,7 @@
 class tx_rsextbase_database {
 
 	var $config;
+	var $debugSQL = FALSE;
 	
 	/**
 	 * 
@@ -48,6 +49,12 @@ class tx_rsextbase_database {
 	function selectRecords($columns, $table, $where, $order = '', $n = '') {
 		if ($order == '') $order = $this->getDefaultSorting($table);
 		$rc = array();
+		if ($this->debugSQL) {
+			echo "SELECT $columns FROM $table";
+			if ($where) echo " WHERE $where";
+			if ($order) echo " ORDER BY $order";
+			if ($n) echo " LIMIT 0,$n";
+		}
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery($columns, $table, $where, '', $order);
 		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 			$rc[] = $row;
