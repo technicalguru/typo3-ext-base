@@ -57,6 +57,11 @@ class tx_rsextbase_dbtable {
 		$rc = $this->database->getRecords($this->table, $where, $order, $n);
 		if ($this->debugSQL) {
 			$this->database->debugSQL = $previous;
+			if (is_array($rc)) {
+				echo "Query returned ".count($rc)." record(s)<br/>";
+			} else {
+				echo "Query returned no records<br/>";
+			}
 		}
 		return $rc;
 	}
