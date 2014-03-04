@@ -45,13 +45,14 @@ class tx_rsextbase_database {
 	 * @param $table
 	 * @param $where
 	 */
-	function selectRecords($columns, $table, $where, $order = '') {
+	function selectRecords($columns, $table, $where, $order = '', $n = '') {
 		if ($order == '') $order = $this->getDefaultSorting($table);
 		$rc = array();
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery($columns, $table, $where, '', $order);
 		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 			$rc[] = $row;
 		}
+		if ($res) $GLOBALS['TYPO3_DB']->sql_free_result($res);
 		return $rc;
 	}
 
@@ -60,8 +61,8 @@ class tx_rsextbase_database {
 	 * @param $table
 	 * @param $where
 	 */
-	function getRecords($table, $where, $order = '') {
-		return $this->selectRecords('DISTINCT *', $table, $where, '', $order);
+	function getRecords($table, $where, $order = '', $n = '') {
+		return $this->selectRecords('DISTINCT *', $table, $where, $n, $order);
 	}
 
 	/**
@@ -71,7 +72,7 @@ class tx_rsextbase_database {
 	 * @param $where
 	 */
 	function selectRecord($columns, $table, $where) {
-		$rc = $this->selectRecords($columns, $table, $where);
+		$rc = $this->selectRecords($columns, $table, $where, '', 1);
 		return $rc[0];
 	}
 
@@ -81,7 +82,7 @@ class tx_rsextbase_database {
 	 * @param $where
 	 */
 	function getRecord($table, $where) {
-		$rc = $this->getRecords($table, $where);
+		$rc = $this->getRecords($table, $where, '', 1);
 		return $rc[0];
 	}
 
@@ -96,51 +97,81 @@ class tx_rsextbase_database {
 	}
 
 	/**
-	 * 
-	 * @param $table
-	 * @param $record
+	 * Inserts the record given and returns the UID of it.
+	 * @param string $table  - table name
+	 * @param array  $record - record to be inserted
+	 * @return UID of record inserted or 0 if error occurred
 	 */
 	function createRecord($table, $record) {
 		$res = $GLOBALS['TYPO3_DB']->exec_INSERTquery($table, $record);
-		if ($res) return $GLOBALS['TYPO3_DB']->sql_insert_id();
-		#echo $GLOBALS['TYPO3_DB']->sql_errno().": ".$GLOBALS['TYPO3_DB']->sql_error();
+		if ($res) {
+			$id = $GLOBALS['TYPO3_DB']->sql_insert_id();
+			$GLOBALS['TYPO3_DB']->sql_free_result($res);
+		}
 		return 0;
 	}
 
 	/**
-	 * 
-	 * @param $table
-	 * @param $uid
-	 * @param $delete
+	 * Inserts the record given and returns the created record.
+	 * @param string $table  - table name
+	 * @param array  $record - record to be inserted
+	 * @return the record inserted or FALSE if error occurred
 	 */
-	function removeRecord($table, $uid, $delete) {
+	function insertRecord($table, $record) {
+		$id = $this->createRecord($table, $record);
+		if ($id) {
+			return selectByUid($id);
+		}
+		return FALSE;
+	}
+
+	/**
+	 * Delete the record from a table.
+	 * @param string  $table  - table name
+	 * @param int     $uid    - UID of record
+	 * @param boolean $delete - TRUE if delete physically, FALSE if logically
+	 */
+	function removeRecord($table, $uid, $delete = FALSE) {
 		if ($delete) {
 			$res = $GLOBALS['TYPO3_DB']->exec_DELETEquery($table, "uid=$uid");
 		} else {
-			$this->updateRecord($table, "uid=$uid", array('deleted' => 1));
+			$res = $this->updateRecord($table, "uid=$uid", array('deleted' => 1));
 		}
+		if ($res) $GLOBALS['TYPO3_DB']->sql_free_result($res);
 	}
 
-	function deleteRecords($table, $where) {
-		$GLOBALS['TYPO3_DB']->exec_DELETEquery($table, $where);
+	/**
+	 * Delete records from a table.
+	 * @param string  $table  - table name
+	 * @param string  $where  - WHERE clause
+	 * @param boolean $delete - TRUE if delete physically, FALSE if logically
+	 */
+	function deleteRecords($table, $where, $delete = FALSE) {
+		if ($delete) {
+			$res = $GLOBALS['TYPO3_DB']->exec_DELETEquery($table, $where);
+		} else {
+			$res = $this->updateRecord($table, $where, array('deleted' => 1));
+		}
+		if ($res) $GLOBALS['TYPO3_DB']->sql_free_result($res);
 	}
 	
 	/**
-	 * 
-	 * @param $table
-	 * @param $where
-	 * @param $fields
+	 * Update records.
+	 * @param string $table  - table name
+	 * @param string $where  - WHERE clause
+	 * @param array  $fields - fields to be updated
 	 */
 	function updateRecordsWhere($table, $where, $fields) {
 		$res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery($table, $where, $fields);
+		if ($res) $GLOBALS['TYPO3_DB']->sql_free_result($res);
 		return $res;
 	}
 
 	/**
-	 * Updates a record
-	 * @param string $table
-	 * @param string $uid
-	 * @param array  $fields
+	 * Updates a single record.
+	 * @param string $table  - table name
+	 * @param string $uid    - UID of record
+	 * @param array  $fields - updated field
 	 */
 	function updateRecord($table, $uid, $fields) {
 		return $this->updateRecordsWhere($table, "uid=$uid", $fields);
@@ -369,6 +400,7 @@ class tx_rsextbase_database {
 				$rc[] = $row;
 			}
 		}
+		if ($res) $GLOBALS['TYPO3_DB']->sql_free_result($res);
 
 		$this->groupMembers[$guid] = $rc;
 		return $rc;
