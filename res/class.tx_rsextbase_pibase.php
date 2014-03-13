@@ -914,6 +914,18 @@ class tx_rsextbase_pibase extends tslib_pibase {
 			}
 		}
 		
+		// Return default for default type of the field
+		$type = $conf['default.']['type.'][$configField];
+		if ($type) {
+			if ($conf['default.'][$type.'.']) {
+				// Type Default for this mode
+				return array($conf['default.'][$type], $conf['default.'][$type.'.']);
+			} else if ($this->config['default.'][$type.'.']) {
+				// General Type Default
+				return array($this->config['default.'][$type], $this->config['default.'][$type.'.']);
+			}
+		}
+
 		// Return general default
 		if ($this->config['default.']['default']) {
 			return array($this->config['default.']['default'], $this->config['default.']['default.']);
