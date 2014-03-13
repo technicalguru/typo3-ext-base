@@ -869,7 +869,6 @@ class tx_rsextbase_pibase extends tslib_pibase {
 	 */
 	function getWrapConfig($field, $configField, $mode, $valueArr) {
 		$conf = $this->config[$mode.'.'];
-
 		// Return the special config if available
 		if ($conf[$configField.'.'] && $conf[$configField]) {
 			return array($conf[$configField], $conf[$configField.'.']);
@@ -897,12 +896,6 @@ class tx_rsextbase_pibase extends tslib_pibase {
 		}
 		*/
 		
-		// Return default for this mode
-		if ($conf['default.']['default']) {
-			return array($conf['default.']['default'], $conf['default.']['default.']);
-		}
-		
-		// Return default type for this mode
 		$type = $conf['type.']['default'];
 		if ($type) {
 			if ($conf['default.'][$type.'.']) {
@@ -915,7 +908,7 @@ class tx_rsextbase_pibase extends tslib_pibase {
 		}
 		
 		// Return default for default type of the field
-		$type = $conf['default.']['type.'][$configField];
+		$type = $this->config['default.']['type.'][$configField];
 		if ($type) {
 			if ($conf['default.'][$type.'.']) {
 				// Type Default for this mode
@@ -926,6 +919,11 @@ class tx_rsextbase_pibase extends tslib_pibase {
 			}
 		}
 
+		// Return default for this mode
+		if ($conf['default.']['default']) {
+			return array($conf['default.']['default'], $conf['default.']['default.']);
+		}
+		
 		// Return general default
 		if ($this->config['default.']['default']) {
 			return array($this->config['default.']['default'], $this->config['default.']['default.']);
