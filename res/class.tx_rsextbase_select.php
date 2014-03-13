@@ -129,6 +129,7 @@ class tx_rsextbase_select extends tx_rsextbase_pibase {
 			foreach ($options AS $uid => $title) {
 				$rc[] = array('uid' => $uid, 'title' => $title);
 			}
+			$this->config['table.']['valueField'] = 'uid'; // Just in case
 		}
 		
 		return $rc;
