@@ -795,7 +795,7 @@ class tx_rsextbase_pibase extends tslib_pibase {
 		$rc = $this->injectStdWrapVariables($rc, $field, $mode, $valueArr, $configField);
 		
 		// There are additional markers in the value?
-		if (strpos($rc, '###L_') >= 0) $rc = $this->fillTemplate($rc, $mode, $valueArr);
+		if (strpos($rc, '###L_') !== FALSE) $rc = $this->fillTemplate($rc, $mode, $valueArr);
 		
 		return $rc;
 	}
