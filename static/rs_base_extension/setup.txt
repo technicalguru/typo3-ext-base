@@ -306,6 +306,13 @@ plugin.tx_rsextbase {
 			wrap = <input type="submit" name="%%%GPVAR%%%" value="|"/>
 			htmlSpecialChars = 1
 		}
+		form_next = TEXT
+		form_next {
+			value = Next
+			lang.de = Weiter
+			wrap = <input type="submit" name="%%%GPVAR%%%" value="|"/>
+			htmlSpecialChars = 1
+		}
 		form_reset = TEXT
 		form_reset {
 			value = Reset
