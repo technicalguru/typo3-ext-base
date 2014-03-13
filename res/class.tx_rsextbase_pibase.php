@@ -770,7 +770,7 @@ class tx_rsextbase_pibase extends tslib_pibase {
 	
 	/**
 	 * Will return the correct value according to TS setup for the field.
-	 * Please note that the correct TS setup will be returns from method getWrapConfig()
+	 * Please note that the correct TS setup will be returned from method getWrapConfig()
 	 * @param field - field name
 	 * @param mode - mode of operation
 	 * @param valuArr - array of values
@@ -792,7 +792,12 @@ class tx_rsextbase_pibase extends tslib_pibase {
 		$rc = $this->invokeCObject($field, $valueConf, $valueArr, $value);
 				
 		// There need to be made some replacements before returning
-		return $this->injectStdWrapVariables($rc, $field, $mode, $valueArr, $configField);
+		$rc = $this->injectStdWrapVariables($rc, $field, $mode, $valueArr, $configField);
+		
+		// There are additional markers in the value?
+		if (strpos($rc, '###L_') >= 0) $rc = $this->fillTemplate($rc, $mode, $valueArr);
+		
+		return $rc;
 	}
 
 	/**
@@ -1063,15 +1068,12 @@ class tx_rsextbase_pibase extends tslib_pibase {
 	 * @param $wrappedSubpartContentArray - not used
 	 * @return the template being replaced by all markers
 	 */
-	function substituteMarkerArray($content,$markContentArray,$subpartContentArray,$wrappedSubpartContentArray) {
+	function substituteMarkerArray($content, $markContentArray, $subpartContentArray, $wrappedSubpartContentArray) {
 
 		// If not arrays then set them
-		if (!is_array($markContentArray))
-		$markContentArray=array();      // Plain markers
-		if (!is_array($subpartContentArray))
-		$subpartContentArray=array();   // Subparts being directly substituted
-		if (!is_array($wrappedSubpartContentArray))
-		$wrappedSubpartContentArray=array();    // Subparts being wrapped
+		if (!is_array($markContentArray)) $markContentArray=array();      // Plain markers
+		if (!is_array($subpartContentArray)) $subpartContentArray=array();   // Subparts being directly substituted
+		if (!is_array($wrappedSubpartContentArray)) $wrappedSubpartContentArray=array();    // Subparts being wrapped
 
 		// Finding keys and check hash:
 		$sPkeys = array_keys($subpartContentArray);
