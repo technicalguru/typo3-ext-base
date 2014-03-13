@@ -29,7 +29,7 @@ class tx_rsextbase_dbtable {
 	var $table;
 	var $database;
 	var $debugSQL = FALSE;
-	
+
 	/**
 	  * Creates this object.
 	  * @param object $database - the rsextbase_database object

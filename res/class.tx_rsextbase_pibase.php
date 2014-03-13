@@ -340,7 +340,7 @@ class tx_rsextbase_pibase extends tslib_pibase {
 		// As we can alter piVars, they will be taken directly
 		if ($paramName == $this->prefixId."[$param]") {
 			//echo "Returning $param directly = ".$this->piVars[$param]."<br/>";
-			if (isset($this->piVars[$param]) {
+			if (isset($this->piVars[$param])) {
 				return $this->piVars[$param];
 			}
 			return $default;
