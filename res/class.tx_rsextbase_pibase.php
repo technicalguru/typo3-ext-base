@@ -329,9 +329,10 @@ class tx_rsextbase_pibase extends tslib_pibase {
 	 * Parameter definition see getGPvarName().
 	 * @param $mode mode of operation
 	 * @param $param name of field
+	 * @param $default default value if not set
 	 * @return current value of GET/POST parameter
 	 */
-	function getGPvar($mode, $param) {
+	function getGPvar($mode, $param, $default = NULL) {
 		if (!$param) throw new Exception("param ist NULL");
 		
 		$paramName = $this->getGPvarName($mode, $param);
@@ -339,7 +340,10 @@ class tx_rsextbase_pibase extends tslib_pibase {
 		// As we can alter piVars, they will be taken directly
 		if ($paramName == $this->prefixId."[$param]") {
 			//echo "Returning $param directly = ".$this->piVars[$param]."<br/>";
-			return $this->piVars[$param];
+			if (isset($this->piVars[$param]) {
+				return $this->piVars[$param];
+			}
+			return $default;
 		}
 		
 		//echo "Returning $param from GP method => $paramName<br/>";
@@ -355,9 +359,9 @@ class tx_rsextbase_pibase extends tslib_pibase {
 				$offset += strlen($matches[1])+2;
 			}
 			if (isset($gp) && !is_array($gp)) $gp = trim($gp);
-			return $gp;
+			if (isset($gp)) return $gp;
 		}
-		return NULL;
+		return $default;
 	}
 
 	/**
