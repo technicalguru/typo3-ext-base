@@ -235,6 +235,40 @@ plugin.tx_rsextbase {
 		form_simple_checkbox < plugin.tx_rsextbase.default.form_checkbox
 		form_simple_checkbox.stdWrap >
 
+		form_radio = USER
+		form_radio {
+			includeLibs = EXT:rsextbase/res/class.tx_rsextbase_select.php
+			userFunc = tx_rsextbase_select->select
+			multiselectTemplate = 0
+			field = _value
+			table {
+				name = fe_groups
+				pidInList = {$plugin.tx_rsextbase.userFolder}
+				where = deleted=0 AND hidden=0
+				orderBy = title
+				valueField = uid
+			}
+			
+			default = COA
+			default {
+				10 = TEXT
+				10 {
+					field = uid
+					wrap = <input type="radio" id="%%%IDOPT%%%" name="%%%GPVAR%%%" value="|"/>
+				}
+				20 = TEXT
+				20 {
+					field = title
+					wrap = <label for="%%%IDOPT%%%">|</label>
+				}
+			}
+			
+			selected < plugin.tx_rsextbase.default.form_radio.default
+			selected {
+				10.wrap = <input type="radio" id="%%%IDOPT%%%" name="%%%GPVAR%%%" value="|" checked="checked"/>
+			}
+		}
+
 		form_select = USER
 		form_select {
 			includeLibs = EXT:rsextbase/res/class.tx_rsextbase_select.php

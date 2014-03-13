@@ -952,6 +952,7 @@ class tx_rsextbase_pibase extends tslib_pibase {
 			'%%%EXTPATH%%%',
 			'%%%RSEXTBASEPATH%%%',
 			'%%%IDVAR%%%',
+			'%%%IDOPT%%%',
 			'%%%LABEL%%%',
 		);
 		$values = array(
@@ -963,6 +964,7 @@ class tx_rsextbase_pibase extends tslib_pibase {
 			t3lib_extMgm::siteRelPath($this->extKey),
 			t3lib_extMgm::siteRelPath('rsextbase'),
 			'id_'.$configField,
+			'id_'.$configField.'_'.$valueArr[$field],
 			$this->getLabel('l_'.$field, $mode, $valueArr),
 		);
 		$rc = str_replace($needles, $values, $template);
