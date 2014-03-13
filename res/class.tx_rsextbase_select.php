@@ -140,7 +140,7 @@ class tx_rsextbase_select extends tx_rsextbase_pibase {
 	 */
 	function renderDefault($option) {
 		$conf = array($this->config['default'], $this->config['default.']);
-		return $this->invokeCObject($this->field, $conf, $option, $option[$this->config['table.']['valueField']]);
+		return $this->renderOption($option, $conf);
 	}
 		
 	/**
@@ -149,9 +149,28 @@ class tx_rsextbase_select extends tx_rsextbase_pibase {
 	 */
 	function renderSelected($option) {
 		$conf = array($this->config['selected'], $this->config['selected.']);
-		return $this->invokeCObject($this->field, $conf, $option, $option[$this->config['table.']['valueField']]);
+		return $this->renderOption($option, $conf);
+	}
+
+	/**
+	  * Render option with given config and inject ID var.
+	  * @param array $option option to be rendered
+	  * @param array $conf   configuration for rendering
+	  */
+	function renderOption($option, $conf) {
+		$rc =  $this->invokeCObject($this->field, $conf, $option, $option[$this->config['table.']['valueField']]);
+		$needles = array(
+			'%%%IDOPT%%%',
+		);
+		$values = array(
+			'%%%IDVAR%%%_'.$option[$this->config['table.']['valueField']],
+		);
+		$rc = str_replace($needles, $values, $rc);
+		return $rc;
 	}
 	
+	function injectOptionVars($s) {
+	}
 	/**
 	 * Check if a script for applying multiselects was already produced.
 	 */
