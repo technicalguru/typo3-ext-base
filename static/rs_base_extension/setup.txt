@@ -16,6 +16,7 @@ plugin.tx_rsextbase {
 		tinyMceTemplate = {$plugin.tx_rsextbase.tinyMceTemplate}
 		multiselectTemplate = {$plugin.tx_rsextbase.multiselectTemplate}
 		viewProfilePID = {$plugin.tx_rsextbase.viewProfilePID}
+		addJqJs = {$plugin.tx_rsextbase.addJqJs}
 		database {
 			fe_users = username
 		}
