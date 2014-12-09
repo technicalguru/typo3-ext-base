@@ -43,7 +43,4 @@ plugin.tx_rsextbase {
 	
 	# Template for Multiselect elements
 	multiselectTemplate = EXT:rsextbase/res/multiselect.tmpl
-
-	# Load JQuery Javascript? (Set to false when JQuery is added elsewhere)
-	addJqJs = 1
 }

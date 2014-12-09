@@ -26,9 +26,7 @@
 require_once(PATH_tslib.'class.tslib_pibase.php');
 require_once(t3lib_extMgm::extPath('rsextbase').'res/class.tx_rsextbase_database.php');
 require_once(t3lib_extMgm::extPath('rsextbase').'res/class.tx_rsextbase_ajaxbase.php');
-if (t3lib_extMgm::isLoaded('t3jquery')) {
-	require_once(t3lib_extMgm::extPath('t3jquery').'class.tx_t3jquery.php');
-}
+require_once(t3lib_extMgm::extPath('t3jquery').'class.tx_t3jquery.php');
 
 class tx_rsextbase_pibase extends tslib_pibase {
 
@@ -48,8 +46,7 @@ class tx_rsextbase_pibase extends tslib_pibase {
 	function init($conf) {
 		if (isset($this->config)) return;
 		$this->conf = $conf;
-
-		$this->LLkey    = $GLOBALS['TSFE']->lang;		
+		
 		$this->pi_loadLL();
 		$this->pi_USER_INT_obj = 1;
 		$this->pi_initPIflexForm();
@@ -95,9 +92,7 @@ class tx_rsextbase_pibase extends tslib_pibase {
 		$this->createDatabaseObject();
 		
 		// jQuery support
-		if ($this->config['addJqJS'] && t3lib_extMgm::isLoaded('t3jquery')) {
-			tx_t3jquery::addJqJS();
-		}
+		tx_t3jquery::addJqJS();
 	}
 
 	/**
@@ -124,10 +119,7 @@ class tx_rsextbase_pibase extends tslib_pibase {
 		if ($this->isAjaxRequest()) {
 			return $this->dispatchAjax();
 		} else {
-			$get = t3lib_div::_GET();
-			if (isset($get['_escaped_fragment_'])) {
-				return $this->getCrawlerSnapshot();
-			} else if (method_exists($this, 'getPluginContent')) {
+			if (method_exists($this, 'getPluginContent')) {
 				return $this->getPluginContent();
 			} else {
 				return $this->pi_wrapInBaseClass("Invalid Plugin Usage: No HTML output defined for ".$this->prefixId."::getPluginContent()");
@@ -135,18 +127,6 @@ class tx_rsextbase_pibase extends tslib_pibase {
 		}
 	}
 	
-	/***************************************************************
-	 * Crawler Handling for dynamic websites
-	 ***************************************************************/
-	function getCrawlerSnapshot() {
-		// Check existance of snapshot
-		// No snapshot available: Return content
-		if (method_exists($this, 'getPluginContent')) {
-			return $this->getPluginContent();
-		}
-		return $this->pi_wrapInBaseClass("Invalid Plugin Usage: No HTML output defined for ".$this->prefixId."::getPluginContent()");
-		
-	}
 	/***************************************************************
 	 * AJAX Handling
 	 ***************************************************************/
@@ -302,12 +282,12 @@ class tx_rsextbase_pibase extends tslib_pibase {
 		$configValue = $this->conf['config.'][$varName];
 		$tsValue = $this->conf[$varName];
 		
-		if ($configValue) {
-			$this->config[$varName] = $configValue;
+		if ($flexValue) {
+			$this->config[$varName] = $flexValue;
 		} else if ($tsValue) {
 			$this->config[$varName] = $tsValue;
 		} else {
-			$this->config[$varName] = $flexValue;
+			$this->config[$varName] = $configValue;
 		}
 	}
 	
