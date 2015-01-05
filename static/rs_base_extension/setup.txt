@@ -85,11 +85,11 @@ plugin.tx_rsextbase {
 
 		image = IMAGE
 		image {
-			file.field = _value
+			file.import.field = _value
 		}
 		icon = IMAGE
 		icon {
-			file.field = _value
+			file.import.field = _value
 			file.maxW = {$plugin.tx_rsextbase.maxIconWidth}
 			file.maxH = {$plugin.tx_rsextbase.maxIconHeight}
 		}

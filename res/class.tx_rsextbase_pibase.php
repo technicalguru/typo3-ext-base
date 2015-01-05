@@ -43,7 +43,7 @@ class tx_rsextbase_pibase extends tslib_pibase {
 	 * Always call this function before starting
 	 * @param $conf configuration
 	 */
-	function init($conf) {
+	function init(&$conf) {
 		if (isset($this->config)) return;
 		$this->conf = $conf;
 		
@@ -100,7 +100,7 @@ class tx_rsextbase_pibase extends tslib_pibase {
 	 */
 	function createDatabaseObject() {
 		$this->db = t3lib_div::makeInstance('tx_rsextbase_database');
-		$this->db->init(&$this->config);
+		$this->db->init($this->config);
 	}
 	
 	/**
@@ -135,7 +135,7 @@ class tx_rsextbase_pibase extends tslib_pibase {
 	 * Call this function if you want to answer AJAX requests.
 	 * @param $conf configuration
 	 */
-	function initAjax($conf) {
+	function initAjax(&$conf) {
 		$this->init($conf);
 		
 		$ajaxName = 'tx_'.$this->strippedExtKey.'_ajax_'.$this->relPath;
