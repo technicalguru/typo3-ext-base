@@ -26,7 +26,7 @@
 require_once(PATH_tslib.'class.tslib_pibase.php');
 require_once(t3lib_extMgm::extPath('rsextbase').'res/class.tx_rsextbase_database.php');
 require_once(t3lib_extMgm::extPath('rsextbase').'res/class.tx_rsextbase_ajaxbase.php');
-require_once(t3lib_extMgm::extPath('t3jquery').'class.tx_t3jquery.php');
+//require_once(t3lib_extMgm::extPath('t3jquery').'class.tx_t3jquery.php');
 
 class tx_rsextbase_pibase extends tslib_pibase {
 
@@ -92,7 +92,7 @@ class tx_rsextbase_pibase extends tslib_pibase {
 		$this->createDatabaseObject();
 		
 		// jQuery support
-		tx_t3jquery::addJqJS();
+		//tx_t3jquery::addJqJS();
 	}
 
 	/**
